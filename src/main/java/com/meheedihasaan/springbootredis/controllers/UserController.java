@@ -29,14 +29,29 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{id}/generate-token")
+    public ResponseEntity<String> generateUserToken(@PathVariable("id") UUID id) {
+        String token = userService.generateUserToken(id);
+        if (token == null) {
+            return ResponseEntity.badRequest().body("User not found.");
+        }
+
+        return ResponseEntity.ok(userService.generateUserToken(id));
+    }
+
+    @GetMapping(value = "/email/get")
+    public ResponseEntity<String> getEmailByUserToken(@RequestParam(name = "token") String token) {
+        return ResponseEntity.ok(userService.getEmailByUserToken(token));
     }
 }
