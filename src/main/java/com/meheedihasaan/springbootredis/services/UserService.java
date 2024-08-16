@@ -47,7 +47,7 @@ public class UserService {
 
         String token = UUID.randomUUID().toString();
         String key = RedisKeyGenerator.generateKey(token, RedisPurpose.USER_TOKEN.name());
-        redisService.addString(key, user.getEmail(), Duration.ofMinutes(1));
+        redisService.addString(key, user.getEmail(), Duration.ofDays(3));
         return token;
     }
 
