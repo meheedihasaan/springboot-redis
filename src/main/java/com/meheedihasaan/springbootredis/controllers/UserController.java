@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody User user) {
+    public ResponseEntity<Void> create(@RequestBody User user) {
         UUID id = userService.create(user);
         URI location = ServletUriComponentsBuilder.fromPath("/{id}").buildAndExpand(id).toUri();
         return ResponseEntity.created(location).build();
