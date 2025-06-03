@@ -1,17 +1,20 @@
 package com.meheedihasaan.springbootredis.controllers;
 
 import com.meheedihasaan.springbootredis.entities.Book;
+import com.meheedihasaan.springbootredis.models.dto.PaginationArgs;
 import com.meheedihasaan.springbootredis.models.requests.CreateBookRequest;
 import com.meheedihasaan.springbootredis.models.requests.UpdateBookRequest;
 import com.meheedihasaan.springbootredis.services.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -22,6 +25,22 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
+    public ResponseEntity<Page<Book>> getAll(
+            @RequestParam(name = "pageNo") int pageNo,
+            @RequestParam(name = "pageSize") int pageSize,
+            @RequestParam(name = "sortBy") String sortBy,
+            @RequestParam(name = "sortOrder") String sortOrder,
+            @RequestParam(required = false) Map<String, Object> filters
+            ) {
+        return ResponseEntity.ok(bookService.getAll(PaginationArgs.builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .sortBy(sortBy)
+                .sortOrder(sortOrder)
+                .filters(filters).build()));
+    }
+
+    @GetMapping("/list")
     public ResponseEntity<List<Book>> getAll() {
         return ResponseEntity.ok(bookService.getAll());
     }
